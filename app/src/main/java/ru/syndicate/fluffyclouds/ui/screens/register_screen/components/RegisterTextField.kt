@@ -30,6 +30,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ru.syndicate.fluffyclouds.R
+import ru.syndicate.fluffyclouds.extensions.containsUnwantedChar
 import ru.syndicate.fluffyclouds.ui.theme.BlackText
 import ru.syndicate.fluffyclouds.ui.theme.CustomGray
 import ru.syndicate.fluffyclouds.ui.theme.GrayText
@@ -47,7 +48,8 @@ fun RegisterTextField(
         modifier = modifier,
         value = text.value,
         onValueChange = { newText ->
-            text.value = newText
+            if (!newText.containsUnwantedChar())
+                text.value = newText
         },
         textStyle = TextStyle(
             fontSize = 17.sp,
@@ -96,7 +98,8 @@ fun PasswordRegisterTextField(
         modifier = modifier,
         value = text.value,
         onValueChange = { newText ->
-            text.value = newText
+            if (!newText.containsUnwantedChar())
+                text.value = newText
         },
         textStyle = TextStyle(
             fontSize = 17.sp,

@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import ru.syndicate.fluffyclouds.ui.screens.home_screen.HomeScreen
 import ru.syndicate.fluffyclouds.ui.screens.register_screen.RegisterScreen
 import ru.syndicate.fluffyclouds.ui.screens.splash_screen.SplashScreen
 import ru.syndicate.fluffyclouds.ui.screens.start_screen.StartScreen
@@ -62,7 +63,7 @@ fun AppNavGraph(
                     .fillMaxSize()
                     .padding(paddingValues),
                 navigateToNext = {
-                    navController.navigate(ScreenRoute.StartScreen.route) {
+                    navController.navigate(ScreenRoute.HomeScreen.route) {
                         popUpTo(0)
                     }
                 }
@@ -144,6 +145,11 @@ fun AppNavGraph(
                             inclusive = true
                         }
                     }
+                },
+                navigateToHome = {
+                    navController.navigate(ScreenRoute.HomeScreen.route) {
+                        popUpTo(0)
+                    }
                 }
             )
         }
@@ -186,7 +192,39 @@ fun AppNavGraph(
                             inclusive = true
                         }
                     }
+                },
+                navigateToHome = {
+                    navController.navigate(ScreenRoute.HomeScreen.route) {
+                        popUpTo(0)
+                    }
                 }
+            )
+        }
+
+        composable(
+            route = ScreenRoute.HomeScreen.route,
+            enterTransition = {
+                fadeIn(
+                    animationSpec = tween(
+                        durationMillis = 100,
+                        easing = Ease
+                    )
+                )
+            },
+            exitTransition = {
+                fadeOut(
+                    animationSpec = tween(
+                        durationMillis = 100,
+                        easing = Ease
+                    )
+                )
+            }
+        ) {
+
+            HomeScreen(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
             )
         }
     }
