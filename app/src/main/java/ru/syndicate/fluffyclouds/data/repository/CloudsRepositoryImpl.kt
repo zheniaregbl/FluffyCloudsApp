@@ -68,13 +68,15 @@ class CloudsRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getAirplaneWithFilter(model: String): JSONArray = withContext(Dispatchers.IO) {
+    override suspend fun getAirplaneWithFilter(model: String): JSONArray = withContext(Dispatchers.Main) {
         val response = cloudsApi.getAirplaneWithFilter(model)
+
+        Log.d("checkAirplane", response.isSuccessful.toString())
 
         if (response.isSuccessful) JSONArray(response.body().toString()) else JSONArray()
     }
 
-    override suspend fun searchAirplaneByModel(model: String): JSONArray = withContext(Dispatchers.IO) {
+    override suspend fun searchAirplaneByModel(model: String): JSONArray = withContext(Dispatchers.Main) {
         val response = cloudsApi.searchAirplaneByModel(model)
 
         if (response.isSuccessful) JSONArray(response.body().toString()) else JSONArray()
