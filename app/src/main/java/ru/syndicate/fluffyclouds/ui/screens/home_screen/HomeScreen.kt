@@ -1,5 +1,9 @@
 package ru.syndicate.fluffyclouds.ui.screens.home_screen
 
+import android.Manifest
+import android.app.Activity
+import android.content.Context
+import android.content.pm.PackageManager
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -16,6 +20,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
@@ -30,13 +35,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.app.ActivityCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import ru.syndicate.fluffyclouds.data.model.Airplane
 import ru.syndicate.fluffyclouds.extensions.containsUnwantedChar
+import ru.syndicate.fluffyclouds.info_functions.generatePDF
+import ru.syndicate.fluffyclouds.info_functions.requestForegroundPermission
 import ru.syndicate.fluffyclouds.ui.theme.MainBlue
 import ru.syndicate.fluffyclouds.view_model.home_view_model.HomeEvent
 import ru.syndicate.fluffyclouds.view_model.home_view_model.HomeViewModel
@@ -45,6 +54,9 @@ import ru.syndicate.fluffyclouds.view_model.home_view_model.HomeViewModel
 fun HomeScreen(
     modifier: Modifier = Modifier
 ) {
+
+    val context = LocalContext.current
+    requestForegroundPermission(context)
 
     val viewModel = hiltViewModel<HomeViewModel>()
     val listAirplane = viewModel.airplaneList.observeAsState()
@@ -190,6 +202,34 @@ fun HomeScreen(
                 }
             }
         }
+
+        Box(
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(
+                    bottom = 30.dp,
+                    end = 30.dp
+                )
+        ) {
+
+            Box(
+                modifier = Modifier
+                    .clip(CircleShape)
+                    .background(
+                        color = MainBlue
+                    )
+                    .clickable { generatePDF(context, listAirplane.value ?: listOf()) }
+                    .padding(20.dp),
+                contentAlignment = Alignment.Center
+            ) {
+
+                Text(
+                    text = "PDF",
+                    fontSize = 16.sp,
+                    color = Color.White
+                )
+            }
+        }
     }
 }
 
@@ -253,3 +293,7 @@ fun PreviewHomeScreen() {
             )
     )
 }
+
+
+private const val REQUEST_FOREGROUND_ONLY_PERMISSIONS_REQUEST_CODE = 34
+
