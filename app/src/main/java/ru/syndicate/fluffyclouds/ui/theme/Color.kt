@@ -15,3 +15,8 @@ val CustomGray = Color(0xFFF2F2F2)
 val BlackText = Color(0xFF101010)
 val GrayText = Color(0xFF979697)
 val MainBlue = Color(0xFF026BCD)
+
+val BackgroundColor = Color(0xFFF2F2F2)
+val CircleBlack = Color(0xFF1D1E20)
+
+val BackgroundBottomBar = Color(0xFFE1EDFF)

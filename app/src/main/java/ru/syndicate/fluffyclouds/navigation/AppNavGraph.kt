@@ -12,6 +12,7 @@ import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -20,9 +21,11 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import ru.syndicate.fluffyclouds.ui.screens.home_screen.HomeScreen
 import ru.syndicate.fluffyclouds.ui.screens.register_screen.RegisterScreen
 import ru.syndicate.fluffyclouds.ui.screens.splash_screen.SplashScreen
 import ru.syndicate.fluffyclouds.ui.screens.start_screen.StartScreen
+import ru.syndicate.fluffyclouds.ui.theme.BackgroundColor
 
 @Composable
 fun AppNavGraph(
@@ -59,10 +62,9 @@ fun AppNavGraph(
 
             SplashScreen(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues),
+                    .fillMaxSize(),
                 navigateToNext = {
-                    navController.navigate(ScreenRoute.StartScreen.route) {
+                    navController.navigate(ScreenRoute.HomeScreen.route) {
                         popUpTo(0)
                     }
                 }
@@ -91,8 +93,7 @@ fun AppNavGraph(
 
             StartScreen(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues),
+                    .fillMaxSize(),
                 navigateToRegister = {
                     navController.navigate(ScreenRoute.RegisterScreen.route) {
                         popUpTo(ScreenRoute.StartScreen.route)
@@ -128,8 +129,7 @@ fun AppNavGraph(
 
             RegisterScreen(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues),
+                    .fillMaxSize(),
                 isRegister = false,
                 navigateToRegister = {
                     navController.navigate(ScreenRoute.RegisterScreen.route) {
@@ -143,6 +143,11 @@ fun AppNavGraph(
                         popUpTo(ScreenRoute.RegisterScreen.route) {
                             inclusive = true
                         }
+                    }
+                },
+                navigateToHome = {
+                    navController.navigate(ScreenRoute.HomeScreen.route) {
+                        popUpTo(0)
                     }
                 }
             )
@@ -170,8 +175,7 @@ fun AppNavGraph(
 
             RegisterScreen(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues),
+                    .fillMaxSize(),
                 isRegister = true,
                 navigateToRegister = {
                     navController.navigate(ScreenRoute.RegisterScreen.route) {
@@ -186,7 +190,41 @@ fun AppNavGraph(
                             inclusive = true
                         }
                     }
+                },
+                navigateToHome = {
+                    navController.navigate(ScreenRoute.HomeScreen.route) {
+                        popUpTo(0)
+                    }
                 }
+            )
+        }
+
+        composable(
+            route = ScreenRoute.HomeScreen.route,
+            enterTransition = {
+                fadeIn(
+                    animationSpec = tween(
+                        durationMillis = 100,
+                        easing = Ease
+                    )
+                )
+            },
+            exitTransition = {
+                fadeOut(
+                    animationSpec = tween(
+                        durationMillis = 100,
+                        easing = Ease
+                    )
+                )
+            }
+        ) {
+
+            HomeScreen(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(
+                        color = BackgroundColor
+                    )
             )
         }
     }

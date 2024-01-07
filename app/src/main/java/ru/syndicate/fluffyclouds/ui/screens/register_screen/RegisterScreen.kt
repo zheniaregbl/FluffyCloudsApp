@@ -41,7 +41,8 @@ fun RegisterScreen(
     modifier: Modifier = Modifier,
     isRegister: Boolean = true,
     navigateToRegister: () -> Unit = { },
-    navigateToAuth: () -> Unit = { }
+    navigateToAuth: () -> Unit = { },
+    navigateToHome: () -> Unit = { }
 ) {
 
     val emailText = remember {
@@ -182,7 +183,7 @@ fun RegisterScreen(
                     .background(
                         color = MainBlue
                     )
-                    .clickable {  }
+                    .clickable { navigateToHome() }
                     .padding(
                         vertical = 14.dp
                     ),
