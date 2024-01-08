@@ -23,6 +23,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,7 +34,11 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import ru.syndicate.fluffyclouds.R
+import ru.syndicate.fluffyclouds.data.model.PeopleClassState
+import ru.syndicate.fluffyclouds.data.model.SheetContentState
 import ru.syndicate.fluffyclouds.data.model.TownTextFieldType
 import ru.syndicate.fluffyclouds.ui.theme.BackgroundColor
 import ru.syndicate.fluffyclouds.ui.theme.CircleBlack
@@ -44,8 +49,14 @@ fun SearchColumn(
     modifier: Modifier = Modifier,
     fromTownTextState: MutableState<String> = mutableStateOf(""),
     toTownTextState: MutableState<String> = mutableStateOf(""),
-    onSwapClick: () -> Unit = { }
+    onSwapClick: () -> Unit = { },
+    onDateChipClick: () -> Unit = { },
+    onPeopleChipClick: () -> Unit = { },
+    changeSheetContent: (SheetContentState) -> Unit = { },
+    peopleClassState: PeopleClassState = PeopleClassState()
 ) {
+
+    val scope = rememberCoroutineScope()
 
     var flagStartPosition by remember {
         mutableStateOf(true)
@@ -186,6 +197,13 @@ fun SearchColumn(
                         .background(
                             color = Color.White
                         )
+                        .clickable {
+                            scope.launch {
+                                changeSheetContent(SheetContentState.CALENDAR)
+                                delay(100)
+                                onDateChipClick()
+                            }
+                        }
                         .padding(14.dp),
                     textColor = GrayText,
                     icon = R.drawable.svg_calendar,
@@ -201,16 +219,34 @@ fun SearchColumn(
             }
 
             item {
+
+                val quantity = peopleClassState.adultCount + peopleClassState.childrenCount + peopleClassState.infantCount
+
+                val classFlight = when (peopleClassState.classState) {
+                    0 -> "Эконом"
+                    1 -> "Комфорт"
+                    2 -> "Бизнес"
+                    3 -> "Первый класс"
+                    else -> "Первый класс"
+                }
+
                 SearchChip(
                     modifier = Modifier
                         .clip(RoundedCornerShape(100.dp))
                         .background(
                             color = Color.White
                         )
+                        .clickable {
+                            scope.launch {
+                                changeSheetContent(SheetContentState.PEOPLE)
+                                delay(100)
+                                onPeopleChipClick()
+                            }
+                        }
                         .padding(14.dp),
                     textColor = GrayText,
                     icon = R.drawable.svg_people,
-                    text = "1, эконом"
+                    text = "$quantity, $classFlight"
                 )
             }
         }

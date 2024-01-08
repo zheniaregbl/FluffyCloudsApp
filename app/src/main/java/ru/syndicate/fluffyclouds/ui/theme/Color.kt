@@ -20,3 +20,7 @@ val BackgroundColor = Color(0xFFF2F2F2)
 val CircleBlack = Color(0xFF1D1E20)
 
 val BackgroundBottomBar = Color(0xFFE1EDFF)
+
+val CustomGreen = Color(0xFF0AC25F)
+
+val BorderRadio = Color(0xFFDFDFDF)

@@ -3,34 +3,33 @@ package ru.syndicate.fluffyclouds.navigation
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.Ease
-import androidx.compose.animation.core.EaseIn
-import androidx.compose.animation.core.EaseInOutQuad
-import androidx.compose.animation.core.EaseOut
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.BottomSheetScaffoldState
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import ru.syndicate.fluffyclouds.data.model.PeopleClassState
+import ru.syndicate.fluffyclouds.data.model.SheetContentState
 import ru.syndicate.fluffyclouds.ui.screens.home_screen.HomeScreen
 import ru.syndicate.fluffyclouds.ui.screens.register_screen.RegisterScreen
 import ru.syndicate.fluffyclouds.ui.screens.splash_screen.SplashScreen
 import ru.syndicate.fluffyclouds.ui.screens.start_screen.StartScreen
 import ru.syndicate.fluffyclouds.ui.theme.BackgroundColor
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppNavGraph(
     navController: NavHostController,
-    paddingValues: PaddingValues
+    scaffoldState: BottomSheetScaffoldState,
+    peopleClassState: PeopleClassState,
+    changeSheetContent: (SheetContentState) -> Unit
 ) {
 
     NavHost(
@@ -224,7 +223,10 @@ fun AppNavGraph(
                     .fillMaxSize()
                     .background(
                         color = BackgroundColor
-                    )
+                    ),
+                scaffoldState = scaffoldState,
+                peopleClassState = peopleClassState,
+                changeSheetContent = changeSheetContent
             )
         }
     }
