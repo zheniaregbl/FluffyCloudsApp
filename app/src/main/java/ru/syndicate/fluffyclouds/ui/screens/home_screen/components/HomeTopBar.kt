@@ -35,6 +35,7 @@ import ru.syndicate.fluffyclouds.ui.theme.MainBlue
 @Composable
 fun HomeTopBar(
     modifier: Modifier = Modifier,
+    isVisibleSearchColumn: Boolean = false,
     onSearchClick: () -> Unit = { }
 ) {
 
@@ -87,7 +88,7 @@ fun HomeTopBar(
                     .size(44.dp)
                     .clip(CircleShape)
                     .background(
-                        color = GrayText
+                        color = if (isVisibleSearchColumn) MainBlue else GrayText
                     )
                     .clickable { onSearchClick() },
                 contentAlignment = Alignment.Center
@@ -98,7 +99,7 @@ fun HomeTopBar(
                         .size(42.dp)
                         .clip(CircleShape)
                         .background(
-                            color = Color.White
+                            color = if (isVisibleSearchColumn) MainBlue else Color.White
                         ),
                     contentAlignment = Alignment.Center
                 ) {
@@ -106,7 +107,7 @@ fun HomeTopBar(
                     Icon(
                         imageVector = ImageVector.vectorResource(id = R.drawable.svg_search),
                         contentDescription = null,
-                        tint = GrayText
+                        tint = if (isVisibleSearchColumn) Color.White else GrayText
                     )
                 }
             }

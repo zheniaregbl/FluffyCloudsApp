@@ -24,3 +24,5 @@ val BackgroundBottomBar = Color(0xFFE1EDFF)
 val CustomGreen = Color(0xFF0AC25F)
 
 val BorderRadio = Color(0xFFDFDFDF)
+
+val DashLineColor = Color(0xFFE3E3E3)

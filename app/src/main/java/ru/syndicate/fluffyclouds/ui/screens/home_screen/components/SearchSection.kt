@@ -1,6 +1,7 @@
 package ru.syndicate.fluffyclouds.ui.screens.home_screen.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,32 +13,30 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import ru.syndicate.fluffyclouds.R
+import ru.syndicate.fluffyclouds.data.model.TownFlightModel
 import ru.syndicate.fluffyclouds.ui.theme.BackgroundColor
 
 @Composable
-fun SearchColumn(
+fun SearchSection(
     modifier: Modifier = Modifier,
-    fromTownTextState: MutableState<String> = mutableStateOf(""),
-    toTownTextState: MutableState<String> = mutableStateOf(""),
-    onSwapClick: () -> Unit = { }
+    searchTown: Pair<TownFlightModel, TownFlightModel> = Pair(
+        TownFlightModel(
+            town = ""
+        ),
+        TownFlightModel(
+            town = ""
+        )
+    ),
+    onClickFromField: () -> Unit = { },
+    onClickToField: () -> Unit = { },
+    onClickSwap: () -> Unit = { }
 ) {
-
-    val listFocusRequester = listOf(
-        FocusRequester(), FocusRequester()
-    )
-    val focusManager = LocalFocusManager.current
 
     Column(
         modifier = modifier
@@ -65,16 +64,20 @@ fun SearchColumn(
                         )
                 ) {
 
-                    TownTextField(
+                    TownField(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(
-                                end = 80.dp
+                            .clip(
+                                RoundedCornerShape(6.dp)
                             )
-                            .focusRequester(listFocusRequester.first()),
-                        textState = fromTownTextState,
-                        textHint = "Откуда",
-                        image = R.drawable.svg_from
+                            .background(
+                                color = Color.White
+                            )
+                            .clickable { onClickFromField() }
+                            .padding(18.dp),
+                        town = searchTown.first.town,
+                        airport = searchTown.first.airport,
+                        hintText = "Откуда"
                     )
                 }
 
@@ -95,16 +98,20 @@ fun SearchColumn(
                         )
                 ) {
 
-                    TownTextField(
+                    TownField(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(
-                                end = 80.dp
+                            .clip(
+                                RoundedCornerShape(6.dp)
                             )
-                            .focusRequester(listFocusRequester.last()),
-                        textState = toTownTextState,
-                        textHint = "Куда",
-                        image = R.drawable.svg_to
+                            .background(
+                                color = Color.White
+                            )
+                            .clickable { onClickToField() }
+                            .padding(18.dp),
+                        town = searchTown.second.town,
+                        airport = searchTown.second.airport,
+                        hintText = "Куда"
                     )
                 }
             }
@@ -120,10 +127,7 @@ fun SearchColumn(
                     .background(
                         color = BackgroundColor
                     ),
-                onClick = {
-                    onSwapClick()
-                    focusManager.clearFocus()
-                }
+                onClick = { onClickSwap() }
             )
         }
     }
@@ -131,8 +135,8 @@ fun SearchColumn(
 
 @Preview
 @Composable
-fun PreviewSearchColumn() {
-    SearchColumn(
+fun PreviewSearchSection() {
+    SearchSection(
         modifier = Modifier
             .fillMaxWidth()
     )

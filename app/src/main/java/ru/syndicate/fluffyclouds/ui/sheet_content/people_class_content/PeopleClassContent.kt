@@ -41,7 +41,7 @@ fun PeopleClassContent(
     modifier: Modifier = Modifier,
     peopleClassState: PeopleClassState = PeopleClassState(),
     onConfirmClick: (Int, Int, Int, Int) -> Unit = {
-            _: Int, _: Int, _: Int, _: Int ->
+        _: Int, _: Int, _: Int, _: Int ->
     },
     scaffoldState: BottomSheetScaffoldState = rememberBottomSheetScaffoldState()
 ) {
@@ -147,7 +147,10 @@ fun PeopleClassContent(
                 .clickable {
                     scope.launch {
                         onConfirmClick(
-                            adultState.intValue, childrenState.intValue, infantState.intValue, classIndex.intValue
+                            adultState.intValue,
+                            childrenState.intValue,
+                            infantState.intValue,
+                            classIndex.intValue
                         )
 
                         scaffoldState.bottomSheetState.hide()

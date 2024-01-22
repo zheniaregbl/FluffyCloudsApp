@@ -1,7 +1,9 @@
 package ru.syndicate.fluffyclouds.ui.screens.home_screen
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,46 +13,66 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.BottomSheetScaffoldState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.unit.toSize
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import ru.syndicate.fluffyclouds.R
 import ru.syndicate.fluffyclouds.data.model.PeopleClassState
 import ru.syndicate.fluffyclouds.data.model.SheetContentState
 import ru.syndicate.fluffyclouds.data.model.TownCardModel
+import ru.syndicate.fluffyclouds.data.model.TownFlightModel
+import ru.syndicate.fluffyclouds.ui.screens.home_screen.components.ChipsRow
 import ru.syndicate.fluffyclouds.ui.screens.home_screen.components.DestinationCard
+import ru.syndicate.fluffyclouds.ui.screens.home_screen.components.FlightCard
 import ru.syndicate.fluffyclouds.ui.screens.home_screen.components.HomeTopBar
+import ru.syndicate.fluffyclouds.ui.screens.home_screen.components.SearchChip
 import ru.syndicate.fluffyclouds.ui.screens.home_screen.components.SearchColumn
+import ru.syndicate.fluffyclouds.ui.screens.home_screen.components.SearchSection
 import ru.syndicate.fluffyclouds.ui.screens.home_screen.components.TownCard
+import ru.syndicate.fluffyclouds.ui.screens.home_screen.components.TownTextField
 import ru.syndicate.fluffyclouds.ui.theme.BackgroundColor
 import ru.syndicate.fluffyclouds.ui.theme.BlackText
 import ru.syndicate.fluffyclouds.ui.theme.CircleBlack
 import ru.syndicate.fluffyclouds.ui.theme.GrayText
 import ru.syndicate.fluffyclouds.ui.theme.MainBlue
+import java.time.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -58,13 +80,28 @@ import ru.syndicate.fluffyclouds.ui.theme.MainBlue
 fun HomeScreen(
     modifier: Modifier = Modifier,
     scaffoldState: BottomSheetScaffoldState = rememberBottomSheetScaffoldState(),
+    searchTown: Pair<TownFlightModel, TownFlightModel> = Pair(
+        TownFlightModel(
+            town = ""
+        ),
+        TownFlightModel(
+            town = ""
+        )
+    ),
+    dateFlight: Pair<LocalDate?, LocalDate?> = Pair(null, null),
     peopleClassState: PeopleClassState = PeopleClassState(),
     changeSheetContent: (SheetContentState) -> Unit = { },
+    onClickFromField: () -> Unit = { },
+    onClickToField: () -> Unit = { },
+    onClickSwap: () -> Unit = { },
+    searchFlight: () -> Unit = { }
 ) {
 
     val scope = rememberCoroutineScope()
 
     val lazyListState = rememberLazyListState()
+    var scrolledY = 0f
+    var previousOffset = 0
 
     val fromTownTextState = remember {
         mutableStateOf("")
@@ -133,46 +170,53 @@ fun HomeScreen(
         ),
     )
 
+    val firstVisibleIndex by remember { derivedStateOf { lazyListState.firstVisibleItemIndex } }
+
     Box(
         modifier = modifier
     ) {
 
         LazyColumn(
             modifier = Modifier
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .padding(
+                    top = 74.dp
+                ),
             state = lazyListState
         ) {
 
             item {
-                Spacer(
+                SearchSection(
                     modifier = Modifier
-                        .height(100.dp)
+                        .fillMaxWidth()
+                        .padding(
+                            top = 20.dp
+                        ),
+                    searchTown = searchTown,
+                    onClickFromField = onClickFromField,
+                    onClickToField = onClickToField,
+                    onClickSwap = onClickSwap
                 )
             }
 
             item {
-                SearchColumn(
+                Spacer(
                     modifier = Modifier
-                        .fillMaxWidth(),
-                    fromTownTextState = fromTownTextState,
-                    toTownTextState = toTownTextState,
-                    onSwapClick = {
-                        val temp = fromTownTextState.value
-                        fromTownTextState.value = toTownTextState.value
-                        toTownTextState.value = temp
-                    },
-                    onDateChipClick = {
-                        scope.launch {
-                            scaffoldState.bottomSheetState.expand()
-                        }
-                    },
-                    onPeopleChipClick = {
-                        scope.launch {
-                            scaffoldState.bottomSheetState.expand()
-                        }
-                    },
-                    changeSheetContent = changeSheetContent,
-                    peopleClassState = peopleClassState
+                        .height(10.dp)
+                )
+            }
+
+            item {
+                ChipsRow(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(
+                            horizontal = 20.dp
+                        ),
+                    scaffoldState = scaffoldState,
+                    dateFlight = dateFlight,
+                    peopleClassState = peopleClassState,
+                    changeSheetContent = changeSheetContent
                 )
             }
 
@@ -398,9 +442,15 @@ fun HomeScreen(
                 .background(
                     color = Color.White
                 ),
+            isVisibleSearchColumn = firstVisibleIndex == 0,
             onSearchClick = {
-                scope.launch {
-                    lazyListState.scrollToItem(0)
+
+                if (firstVisibleIndex != 0) {
+                    scope.launch {
+                        lazyListState.scrollToItem(0)
+                    }
+                } else {
+                    searchFlight()
                 }
             }
         )

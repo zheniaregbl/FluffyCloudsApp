@@ -1,15 +1,12 @@
-package ru.syndicate.fluffyclouds.navigation
+package ru.syndicate.fluffyclouds.navigation.app_navigation
 
 import android.annotation.SuppressLint
 import android.util.Log
-import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.Ease
-import androidx.compose.animation.core.tween
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
@@ -30,6 +27,8 @@ import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -44,22 +43,27 @@ import ru.syndicate.fluffyclouds.ui.bottom_navigation_bar.BottomBar
 import ru.syndicate.fluffyclouds.ui.sheet_content.calendar_content.CalendarContent
 import ru.syndicate.fluffyclouds.ui.sheet_content.people_class_content.PeopleClassContent
 import ru.syndicate.fluffyclouds.ui.theme.BackgroundBottomBar
-import ru.syndicate.fluffyclouds.view_model.sheet_view_model.SheetEvent
-import ru.syndicate.fluffyclouds.view_model.sheet_view_model.SheetViewModel
+import ru.syndicate.fluffyclouds.ui.theme.BackgroundColor
+import ru.syndicate.fluffyclouds.view_model.app_view_model.AppEvent
+import ru.syndicate.fluffyclouds.view_model.app_view_model.AppViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun AppNavigation(
-    navController: NavHostController = rememberNavController(),
+    navController: NavHostController = rememberNavController()
 ) {
 
-    val sheetViewModel = hiltViewModel<SheetViewModel>()
-    val peopleClassState by sheetViewModel.peopleClassState.collectAsState()
-    val sheetState by sheetViewModel.sheetContentState.collectAsState()
+    val appViewModel = hiltViewModel<AppViewModel>()
+    val searchTown by appViewModel.searchTowns.collectAsState()
+    val dateFlight by appViewModel.dateFlight.collectAsState()
+    val peopleClassState by appViewModel.peopleClassState.collectAsState()
+    val sheetState by appViewModel.sheetContentState.collectAsState()
 
     val routeList = listOf(
-        ScreenRoute.HomeScreen.route
+        ScreenRoute.FlightScreen.route,
+        ScreenRoute.TicketScreen.route,
+        ScreenRoute.ProfileScreen.route
     )
 
     val currentRoute = getCurrentRoute(navController = navController)
@@ -67,20 +71,12 @@ fun AppNavigation(
     val showNavigationMenu = navController
         .currentBackStackEntryAsState().value?.destination?.route in routeList.map { it }
 
+    val selectedTabIndex = remember {
+        mutableIntStateOf(0)
+    }
+
     val scaffoldState = rememberBottomSheetScaffoldState(
         bottomSheetState = rememberStandardBottomSheetState(skipHiddenState = false)
-    )
-
-    val shadowColor by animateColorAsState(
-        targetValue = if (scaffoldState.bottomSheetState.targetValue == SheetValue.Expanded) Color.Black.copy(
-            alpha = 0.3f
-        )
-        else Color.Transparent,
-        animationSpec = tween(
-            durationMillis = 400,
-            easing = Ease
-        ),
-        label = "shadow"
     )
 
     BottomSheetScaffold(
@@ -89,61 +85,67 @@ fun AppNavigation(
         scaffoldState = scaffoldState,
         sheetContent = {
 
-            AnimatedContent(
-                targetState = sheetState,
-                transitionSpec = {
-                    fadeIn() togetherWith fadeOut()
-                },
-                label = ""
-            ) { state ->
+            AnimatedVisibility(
+                visible = sheetState == SheetContentState.CALENDAR,
+                enter = EnterTransition.None,
+                exit = ExitTransition.None
+            ) {
 
-                when (state) {
-
-                    SheetContentState.CALENDAR -> {
-                        CalendarContent(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(100.dp)
+                CalendarContent(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    dateFlight = dateFlight,
+                    onConfirmClick = { dateFrom, dateTo ->
+                        appViewModel.onEvent(
+                            AppEvent.ChangeFlightDate(
+                                dateFrom, dateTo
+                            )
                         )
-                    }
+                    },
+                    scaffoldState = scaffoldState
+                )
+            }
 
-                    SheetContentState.PEOPLE -> {
-                        PeopleClassContent(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(
-                                    horizontal = 20.dp
-                                ),
-                            peopleClassState = peopleClassState,
-                            onConfirmClick = { adult, children, infant, classIndex ->
+            AnimatedVisibility(
+                visible = sheetState == SheetContentState.PEOPLE,
+                enter = EnterTransition.None,
+                exit = ExitTransition.None
+            ) {
+                PeopleClassContent(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(
+                            horizontal = 20.dp
+                        ),
+                    peopleClassState = peopleClassState,
+                    onConfirmClick = { adult, children, infant, classIndex ->
 
-                                Log.d("changeState", adult.toString())
+                        Log.d("changeState", adult.toString())
 
-                                sheetViewModel.onEvent(
-                                    SheetEvent.ChangePeopleClass(
-                                        adult = adult,
-                                        children = children,
-                                        infant = infant,
-                                        indexClass = classIndex
-                                    )
-                                )
-                            },
-                            scaffoldState = scaffoldState
+                        appViewModel.onEvent(
+                            AppEvent.ChangePeopleClass(
+                                adult = adult,
+                                children = children,
+                                infant = infant,
+                                indexClass = classIndex
+                            )
                         )
-                    }
-                }
+                    },
+                    scaffoldState = scaffoldState
+                )
             }
         },
         sheetShape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp),
         sheetPeekHeight = 0.dp,
-        sheetContainerColor = Color.White
+        sheetContainerColor = when (sheetState) {
+            SheetContentState.CALENDAR -> BackgroundColor
+            SheetContentState.PEOPLE -> Color.White
+        }
     ) {
-
 
         Scaffold(
             modifier = Modifier
                 .fillMaxSize(),
-            contentWindowInsets = WindowInsets.systemBars,
             bottomBar = {
 
                 if (showNavigationMenu)
@@ -158,9 +160,12 @@ fun AppNavigation(
                             .clip(CircleShape)
                             .background(
                                 color = BackgroundBottomBar
-                            )
+                            ),
+                        navController = navController,
+                        selectedTabIndex = selectedTabIndex
                     )
-            }
+            },
+            contentWindowInsets = WindowInsets.systemBars
         ) {
 
             Surface(
@@ -172,20 +177,28 @@ fun AppNavigation(
                 AppNavGraph(
                     navController = navController,
                     scaffoldState = scaffoldState,
-                    peopleClassState = peopleClassState,
-                    changeSheetContent = {
-                        sheetViewModel.onEvent(SheetEvent.ChangeSheetContentType(it))
-                    }
+                    appViewModel = appViewModel,
+                    searchTown = searchTown,
+                    dateFlight = dateFlight,
+                    sheetState = sheetState,
+                    peopleClassState = peopleClassState
                 )
             }
         }
 
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(
-                    color = shadowColor
-                )
-        )
+        AnimatedVisibility(
+            visible = scaffoldState.bottomSheetState.targetValue == SheetValue.Expanded,
+            enter = fadeIn(),
+            exit = fadeOut()
+        ) {
+
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(
+                        color = Color.Black.copy(alpha = 0.3f)
+                    )
+            )
+        }
     }
 }

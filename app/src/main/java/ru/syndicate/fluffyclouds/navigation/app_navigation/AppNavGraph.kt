@@ -1,4 +1,4 @@
-package ru.syndicate.fluffyclouds.navigation
+package ru.syndicate.fluffyclouds.navigation.app_navigation
 
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
@@ -8,28 +8,40 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.BottomSheetScaffoldState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import ru.syndicate.fluffyclouds.data.model.PeopleClassState
 import ru.syndicate.fluffyclouds.data.model.SheetContentState
-import ru.syndicate.fluffyclouds.ui.screens.home_screen.HomeScreen
+import ru.syndicate.fluffyclouds.data.model.TownFlightModel
+import ru.syndicate.fluffyclouds.navigation.flight_navigation.FlightNavigation
+import ru.syndicate.fluffyclouds.ui.screens.profile_screen.ProfileScreen
 import ru.syndicate.fluffyclouds.ui.screens.register_screen.RegisterScreen
+import ru.syndicate.fluffyclouds.ui.screens.select_town_screen.SelectTownScreen
 import ru.syndicate.fluffyclouds.ui.screens.splash_screen.SplashScreen
 import ru.syndicate.fluffyclouds.ui.screens.start_screen.StartScreen
+import ru.syndicate.fluffyclouds.ui.screens.ticket_screen.TicketScreen
 import ru.syndicate.fluffyclouds.ui.theme.BackgroundColor
+import ru.syndicate.fluffyclouds.view_model.app_view_model.AppEvent
+import ru.syndicate.fluffyclouds.view_model.app_view_model.AppViewModel
+import java.time.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppNavGraph(
     navController: NavHostController,
     scaffoldState: BottomSheetScaffoldState,
-    peopleClassState: PeopleClassState,
-    changeSheetContent: (SheetContentState) -> Unit
+    appViewModel: AppViewModel,
+    searchTown: Pair<TownFlightModel, TownFlightModel>,
+    dateFlight: Pair<LocalDate?, LocalDate?>,
+    sheetState: SheetContentState,
+    peopleClassState: PeopleClassState
 ) {
 
     NavHost(
@@ -63,7 +75,7 @@ fun AppNavGraph(
                 modifier = Modifier
                     .fillMaxSize(),
                 navigateToNext = {
-                    navController.navigate(ScreenRoute.HomeScreen.route) {
+                    navController.navigate(ScreenRoute.FlightScreen.route) {
                         popUpTo(0)
                     }
                 }
@@ -145,7 +157,7 @@ fun AppNavGraph(
                     }
                 },
                 navigateToHome = {
-                    navController.navigate(ScreenRoute.HomeScreen.route) {
+                    navController.navigate(ScreenRoute.FlightScreen.route) {
                         popUpTo(0)
                     }
                 }
@@ -191,7 +203,7 @@ fun AppNavGraph(
                     }
                 },
                 navigateToHome = {
-                    navController.navigate(ScreenRoute.HomeScreen.route) {
+                    navController.navigate(ScreenRoute.FlightScreen.route) {
                         popUpTo(0)
                     }
                 }
@@ -199,7 +211,7 @@ fun AppNavGraph(
         }
 
         composable(
-            route = ScreenRoute.HomeScreen.route,
+            route = ScreenRoute.FlightScreen.route,
             enterTransition = {
                 fadeIn(
                     animationSpec = tween(
@@ -218,15 +230,144 @@ fun AppNavGraph(
             }
         ) {
 
-            HomeScreen(
+            FlightNavigation(
+                globalNavController = navController,
+                scaffoldState = scaffoldState,
+                appViewModel = appViewModel,
+                searchTown = searchTown,
+                dateFlight = dateFlight,
+                peopleClassState = peopleClassState,
+                sheetState = sheetState
+            )
+        }
+
+        composable(
+            route = ScreenRoute.TicketScreen.route,
+            enterTransition = {
+                fadeIn(
+                    animationSpec = tween(
+                        durationMillis = 100,
+                        easing = Ease
+                    )
+                )
+            },
+            exitTransition = {
+                fadeOut(
+                    animationSpec = tween(
+                        durationMillis = 100,
+                        easing = Ease
+                    )
+                )
+            }
+        ) {
+
+            TicketScreen(
+                modifier = Modifier
+                    .fillMaxSize()
+            )
+        }
+
+        composable(
+            route = ScreenRoute.ProfileScreen.route,
+            enterTransition = {
+                fadeIn(
+                    animationSpec = tween(
+                        durationMillis = 100,
+                        easing = Ease
+                    )
+                )
+            },
+            exitTransition = {
+                fadeOut(
+                    animationSpec = tween(
+                        durationMillis = 100,
+                        easing = Ease
+                    )
+                )
+            }
+        ) {
+
+            ProfileScreen(
+                modifier = Modifier
+                    .fillMaxSize()
+            )
+        }
+
+        composable(
+            route = ScreenRoute.SelectTownFromScreen.route,
+            enterTransition = {
+                fadeIn(
+                    animationSpec = tween(
+                        durationMillis = 100,
+                        easing = Ease
+                    )
+                )
+            },
+            exitTransition = {
+                fadeOut(
+                    animationSpec = tween(
+                        durationMillis = 100,
+                        easing = Ease
+                    )
+                )
+            }
+        ) {
+
+            SelectTownScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(
                         color = BackgroundColor
+                    )
+                    .padding(
+                        horizontal = 20.dp,
+                        vertical = 20.dp
                     ),
-                scaffoldState = scaffoldState,
-                peopleClassState = peopleClassState,
-                changeSheetContent = changeSheetContent
+                onClickTown = { town ->
+                    appViewModel.onEvent(AppEvent.ChangeTownFrom(town))
+                    navController.navigate(ScreenRoute.FlightScreen.route) {
+                        popUpTo(0)
+                    }
+                }
+            )
+        }
+
+        composable(
+            route = ScreenRoute.SelectTownToScreen.route,
+            enterTransition = {
+                fadeIn(
+                    animationSpec = tween(
+                        durationMillis = 100,
+                        easing = Ease
+                    )
+                )
+            },
+            exitTransition = {
+                fadeOut(
+                    animationSpec = tween(
+                        durationMillis = 100,
+                        easing = Ease
+                    )
+                )
+            }
+        ) {
+
+            SelectTownScreen(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(
+                        color = BackgroundColor
+                    )
+                    .padding(
+                        horizontal = 20.dp,
+                        vertical = 20.dp
+                    ),
+                onClickTown = { town ->
+                    appViewModel.onEvent(AppEvent.ChangeTownTo(town))
+                    navController.navigate(ScreenRoute.FlightScreen.route) {
+                        popUpTo(0)
+                    }
+                }
             )
         }
     }

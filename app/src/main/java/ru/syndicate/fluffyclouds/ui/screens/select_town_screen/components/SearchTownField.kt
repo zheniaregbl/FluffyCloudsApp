@@ -1,4 +1,4 @@
-package ru.syndicate.fluffyclouds.ui.screens.home_screen.components
+package ru.syndicate.fluffyclouds.ui.screens.select_town_screen.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -41,11 +42,10 @@ import ru.syndicate.fluffyclouds.ui.theme.GrayText
 import ru.syndicate.fluffyclouds.ui.theme.MainBlue
 
 @Composable
-fun TownTextField(
+fun SearchTownField(
     modifier: Modifier = Modifier,
     textState: MutableState<String> = mutableStateOf(""),
-    textHint: String = "Откуда",
-    image: Int = R.drawable.svg_from
+    hintText: String = "Город, страна или аэропорт"
 ) {
 
     val customTextSelectionColors = TextSelectionColors(
@@ -61,7 +61,7 @@ fun TownTextField(
                 textState.value = it
         },
         textStyle = TextStyle(
-            fontSize = 16.sp,
+            fontSize = 15.sp,
             fontWeight = FontWeight.Medium,
             fontFamily = MaterialTheme.typography.bodyMedium.fontFamily,
             color = BlackText,
@@ -77,16 +77,21 @@ fun TownTextField(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .clip(RoundedCornerShape(6.dp))
+                .clip(RoundedCornerShape(12.dp))
                 .background(
                     color = Color.White
                 )
-                .padding(18.dp),
+                .padding(
+                    horizontal = 18.dp,
+                    vertical = 14.dp
+                ),
             verticalAlignment = Alignment.CenterVertically
         ) {
 
             Icon(
-                imageVector = ImageVector.vectorResource(id = image),
+                modifier = Modifier
+                    .size(16.dp),
+                imageVector = ImageVector.vectorResource(id = R.drawable.svg_search),
                 contentDescription = null,
                 tint = if (textState.value.isNotEmpty()) BlackText else GrayText
             )
@@ -103,9 +108,9 @@ fun TownTextField(
                 Box {
                     if (textState.value.isEmpty())
                         Text(
-                            text = textHint,
+                            text = hintText,
                             style = MaterialTheme.typography.bodyMedium,
-                            fontSize = 16.sp,
+                            fontSize = 15.sp,
                             fontWeight = FontWeight.Medium,
                             color = GrayText
                         )
@@ -117,60 +122,12 @@ fun TownTextField(
             }
         }
     }
-
-    /*OutlinedTextField(
-        modifier = modifier,
-        value = textState.value,
-        onValueChange = {
-            if (!it.containsUnwantedChar())
-                textState.value = it
-        },
-        textStyle = TextStyle(
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Medium,
-            fontFamily = MaterialTheme.typography.bodyMedium.fontFamily,
-            color = BlackText,
-            fontSynthesis = FontSynthesis.None
-        ),
-        placeholder = {
-            Text(
-                text = if (townTextFieldType == TownTextFieldType.FROM) "Откуда"
-                    else "Куда",
-                style = MaterialTheme.typography.bodyMedium,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Medium,
-                color = GrayText
-            )
-        },
-        leadingIcon = {
-            Icon(
-                imageVector = ImageVector.vectorResource(
-                    id = if (townTextFieldType == TownTextFieldType.FROM) R.drawable.svg_from
-                        else R.drawable.svg_to
-                ),
-                contentDescription = null,
-                tint = GrayText
-            )
-        },
-        singleLine = true,
-        shape = RoundedCornerShape(6.dp),
-        colors = TextFieldDefaults.outlinedTextFieldColors(
-            containerColor = Color.White,
-            cursorColor = MainBlue,
-            unfocusedBorderColor = Color.Transparent,
-            focusedBorderColor = Color.Transparent,
-            selectionColors = TextSelectionColors(
-                handleColor = MainBlue,
-                backgroundColor = MainBlue.copy(alpha = 0.4f)
-            )
-        )
-    )*/
 }
 
 @Preview
 @Composable
-fun PreviewTownTextField() {
-    TownTextField(
+fun PreviewSearchTownField() {
+    SearchTownField(
         modifier = Modifier
             .fillMaxWidth()
     )
