@@ -108,7 +108,7 @@ fun StartScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(
-                            horizontal = 12.dp
+                            horizontal = 20.dp
                         )
                 ) {
 

@@ -11,3 +11,8 @@ sealed class ScreenRoute(val route: String) {
     data object SelectTownFromScreen: ScreenRoute("select_town_from_screen")
     data object SelectTownToScreen: ScreenRoute("select_town_to_screen")
 }
+
+sealed class FlightScreenRoute(val route: String) {
+    data object HomeScreen: FlightScreenRoute("home_screen")
+    data object FlightListScreen: FlightScreenRoute("flight_list_screen")
+}

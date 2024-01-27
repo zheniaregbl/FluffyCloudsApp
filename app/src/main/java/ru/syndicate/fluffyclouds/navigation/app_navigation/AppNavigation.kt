@@ -61,7 +61,8 @@ fun AppNavigation(
     val sheetState by appViewModel.sheetContentState.collectAsState()
 
     val routeList = listOf(
-        ScreenRoute.FlightScreen.route,
+        FlightScreenRoute.HomeScreen.route,
+        FlightScreenRoute.FlightListScreen.route,
         ScreenRoute.TicketScreen.route,
         ScreenRoute.ProfileScreen.route
     )
@@ -171,16 +172,15 @@ fun AppNavigation(
             Surface(
                 modifier = Modifier
                     .fillMaxSize(),
-                color = Color.White
+                color = BackgroundColor
             ) {
 
                 AppNavGraph(
-                    navController = navController,
+                    appNavController = navController,
                     scaffoldState = scaffoldState,
                     appViewModel = appViewModel,
                     searchTown = searchTown,
                     dateFlight = dateFlight,
-                    sheetState = sheetState,
                     peopleClassState = peopleClassState
                 )
             }

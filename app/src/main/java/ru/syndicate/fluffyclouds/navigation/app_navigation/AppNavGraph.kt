@@ -11,16 +11,20 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.BottomSheetScaffoldState
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SheetValue
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.navigation
 import ru.syndicate.fluffyclouds.data.model.PeopleClassState
 import ru.syndicate.fluffyclouds.data.model.SheetContentState
 import ru.syndicate.fluffyclouds.data.model.TownFlightModel
-import ru.syndicate.fluffyclouds.navigation.flight_navigation.FlightNavigation
+import ru.syndicate.fluffyclouds.ui.screens.flight_list_screen.FlightListScreen
+import ru.syndicate.fluffyclouds.ui.screens.home_screen.HomeScreen
 import ru.syndicate.fluffyclouds.ui.screens.profile_screen.ProfileScreen
 import ru.syndicate.fluffyclouds.ui.screens.register_screen.RegisterScreen
 import ru.syndicate.fluffyclouds.ui.screens.select_town_screen.SelectTownScreen
@@ -35,17 +39,16 @@ import java.time.LocalDate
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppNavGraph(
-    navController: NavHostController,
+    appNavController: NavHostController,
     scaffoldState: BottomSheetScaffoldState,
     appViewModel: AppViewModel,
     searchTown: Pair<TownFlightModel, TownFlightModel>,
     dateFlight: Pair<LocalDate?, LocalDate?>,
-    sheetState: SheetContentState,
     peopleClassState: PeopleClassState
 ) {
 
     NavHost(
-        navController = navController,
+        navController = appNavController,
         startDestination = ScreenRoute.SplashScreen.route,
         enterTransition = { EnterTransition.None },
         exitTransition = { ExitTransition.None }
@@ -56,7 +59,7 @@ fun AppNavGraph(
             enterTransition = {
                 fadeIn(
                     animationSpec = tween(
-                        durationMillis = 100,
+                        durationMillis = 200,
                         easing = Ease
                     )
                 )
@@ -64,7 +67,7 @@ fun AppNavGraph(
             exitTransition = {
                 fadeOut(
                     animationSpec = tween(
-                        durationMillis = 100,
+                        durationMillis = 200,
                         easing = Ease
                     )
                 )
@@ -73,9 +76,12 @@ fun AppNavGraph(
 
             SplashScreen(
                 modifier = Modifier
-                    .fillMaxSize(),
+                    .fillMaxSize()
+                    .background(
+                        color = Color.White
+                    ),
                 navigateToNext = {
-                    navController.navigate(ScreenRoute.FlightScreen.route) {
+                    appNavController.navigate(ScreenRoute.FlightScreen.route) {
                         popUpTo(0)
                     }
                 }
@@ -87,7 +93,7 @@ fun AppNavGraph(
             enterTransition = {
                 fadeIn(
                     animationSpec = tween(
-                        durationMillis = 100,
+                        durationMillis = 200,
                         easing = Ease
                     )
                 )
@@ -95,7 +101,7 @@ fun AppNavGraph(
             exitTransition = {
                 fadeOut(
                     animationSpec = tween(
-                        durationMillis = 100,
+                        durationMillis = 200,
                         easing = Ease
                     )
                 )
@@ -104,14 +110,17 @@ fun AppNavGraph(
 
             StartScreen(
                 modifier = Modifier
-                    .fillMaxSize(),
+                    .fillMaxSize()
+                    .background(
+                        color = Color.White
+                    ),
                 navigateToRegister = {
-                    navController.navigate(ScreenRoute.RegisterScreen.route) {
+                    appNavController.navigate(ScreenRoute.RegisterScreen.route) {
                         popUpTo(ScreenRoute.StartScreen.route)
                     }
                 },
                 navigateToAuth = {
-                    navController.navigate(ScreenRoute.AuthScreen.route) {
+                    appNavController.navigate(ScreenRoute.AuthScreen.route) {
                         popUpTo(ScreenRoute.StartScreen.route)
                     }
                 }
@@ -123,7 +132,7 @@ fun AppNavGraph(
             enterTransition = {
                 fadeIn(
                     animationSpec = tween(
-                        durationMillis = 100,
+                        durationMillis = 200,
                         easing = Ease
                     )
                 )
@@ -131,7 +140,7 @@ fun AppNavGraph(
             exitTransition = {
                 fadeOut(
                     animationSpec = tween(
-                        durationMillis = 100,
+                        durationMillis = 200,
                         easing = Ease
                     )
                 )
@@ -140,24 +149,27 @@ fun AppNavGraph(
 
             RegisterScreen(
                 modifier = Modifier
-                    .fillMaxSize(),
+                    .fillMaxSize()
+                    .background(
+                        color = Color.White
+                    ),
                 isRegister = false,
                 navigateToRegister = {
-                    navController.navigate(ScreenRoute.RegisterScreen.route) {
+                    appNavController.navigate(ScreenRoute.RegisterScreen.route) {
                         popUpTo(ScreenRoute.AuthScreen.route) {
                             inclusive = true
                         }
                     }
                 },
                 navigateToAuth = {
-                    navController.navigate(ScreenRoute.AuthScreen.route) {
+                    appNavController.navigate(ScreenRoute.AuthScreen.route) {
                         popUpTo(ScreenRoute.RegisterScreen.route) {
                             inclusive = true
                         }
                     }
                 },
                 navigateToHome = {
-                    navController.navigate(ScreenRoute.FlightScreen.route) {
+                    appNavController.navigate(ScreenRoute.FlightScreen.route) {
                         popUpTo(0)
                     }
                 }
@@ -169,7 +181,7 @@ fun AppNavGraph(
             enterTransition = {
                 fadeIn(
                     animationSpec = tween(
-                        durationMillis = 100,
+                        durationMillis = 200,
                         easing = Ease
                     )
                 )
@@ -177,7 +189,7 @@ fun AppNavGraph(
             exitTransition = {
                 fadeOut(
                     animationSpec = tween(
-                        durationMillis = 100,
+                        durationMillis = 200,
                         easing = Ease
                     )
                 )
@@ -186,36 +198,40 @@ fun AppNavGraph(
 
             RegisterScreen(
                 modifier = Modifier
-                    .fillMaxSize(),
+                    .fillMaxSize()
+                    .background(
+                        color = Color.White
+                    ),
                 isRegister = true,
                 navigateToRegister = {
-                    navController.navigate(ScreenRoute.RegisterScreen.route) {
+                    appNavController.navigate(ScreenRoute.RegisterScreen.route) {
                         popUpTo(ScreenRoute.AuthScreen.route) {
                             inclusive = true
                         }
                     }
                 },
                 navigateToAuth = {
-                    navController.navigate(ScreenRoute.AuthScreen.route) {
+                    appNavController.navigate(ScreenRoute.AuthScreen.route) {
                         popUpTo(ScreenRoute.RegisterScreen.route) {
                             inclusive = true
                         }
                     }
                 },
                 navigateToHome = {
-                    navController.navigate(ScreenRoute.FlightScreen.route) {
+                    appNavController.navigate(ScreenRoute.FlightScreen.route) {
                         popUpTo(0)
                     }
                 }
             )
         }
 
-        composable(
+        navigation(
+            startDestination = FlightScreenRoute.HomeScreen.route,
             route = ScreenRoute.FlightScreen.route,
             enterTransition = {
                 fadeIn(
                     animationSpec = tween(
-                        durationMillis = 100,
+                        durationMillis = 200,
                         easing = Ease
                     )
                 )
@@ -223,22 +239,97 @@ fun AppNavGraph(
             exitTransition = {
                 fadeOut(
                     animationSpec = tween(
-                        durationMillis = 100,
+                        durationMillis = 200,
                         easing = Ease
                     )
                 )
             }
         ) {
 
-            FlightNavigation(
-                globalNavController = navController,
-                scaffoldState = scaffoldState,
-                appViewModel = appViewModel,
-                searchTown = searchTown,
-                dateFlight = dateFlight,
-                peopleClassState = peopleClassState,
-                sheetState = sheetState
-            )
+            composable(
+                route = FlightScreenRoute.HomeScreen.route,
+                enterTransition = {
+                    fadeIn(
+                        animationSpec = tween(
+                            durationMillis = 200,
+                            easing = Ease
+                        )
+                    )
+                },
+                exitTransition = {
+                    fadeOut(
+                        animationSpec = tween(
+                            durationMillis = 200,
+                            easing = Ease
+                        )
+                    )
+                }
+            ) {
+
+                HomeScreen(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    scaffoldState = scaffoldState,
+                    searchTown = searchTown,
+                    dateFlight = dateFlight,
+                    peopleClassState = peopleClassState,
+                    changeSheetContent = {
+                        if (scaffoldState.bottomSheetState.targetValue != SheetValue.Expanded)
+                            appViewModel.onEvent(AppEvent.ChangeSheetContentType(it))
+                    },
+                    onClickFromField = {
+                        appNavController.navigate(ScreenRoute.SelectTownFromScreen.route)
+                    },
+                    onClickToField = {
+                        appNavController.navigate(ScreenRoute.SelectTownToScreen.route)
+                    },
+                    onClickSwap = {
+                        appViewModel.onEvent(AppEvent.SwapTown)
+                    },
+                    searchFlight = {
+                        appNavController.navigate(FlightScreenRoute.FlightListScreen.route)
+                    }
+                )
+            }
+
+            composable(
+                route = FlightScreenRoute.FlightListScreen.route,
+                enterTransition = {
+                    fadeIn(
+                        animationSpec = tween(
+                            durationMillis = 200,
+                            easing = Ease
+                        )
+                    )
+                },
+                exitTransition = {
+                    fadeOut(
+                        animationSpec = tween(
+                            durationMillis = 200,
+                            easing = Ease
+                        )
+                    )
+                }
+            ) {
+
+                FlightListScreen(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    scaffoldState = scaffoldState,
+                    flightPair = searchTown,
+                    dateFlight = dateFlight,
+                    peopleClassState = peopleClassState,
+                    changeSheetContent = {
+                        if (scaffoldState.bottomSheetState.targetValue != SheetValue.Expanded)
+                            appViewModel.onEvent(AppEvent.ChangeSheetContentType(it))
+                    },
+                    clickToBack = {
+                        appNavController.navigate(FlightScreenRoute.HomeScreen.route) {
+                            popUpTo(0)
+                        }
+                    }
+                )
+            }
         }
 
         composable(
@@ -246,7 +337,7 @@ fun AppNavGraph(
             enterTransition = {
                 fadeIn(
                     animationSpec = tween(
-                        durationMillis = 100,
+                        durationMillis = 200,
                         easing = Ease
                     )
                 )
@@ -254,7 +345,7 @@ fun AppNavGraph(
             exitTransition = {
                 fadeOut(
                     animationSpec = tween(
-                        durationMillis = 100,
+                        durationMillis = 200,
                         easing = Ease
                     )
                 )
@@ -272,7 +363,7 @@ fun AppNavGraph(
             enterTransition = {
                 fadeIn(
                     animationSpec = tween(
-                        durationMillis = 100,
+                        durationMillis = 200,
                         easing = Ease
                     )
                 )
@@ -280,7 +371,7 @@ fun AppNavGraph(
             exitTransition = {
                 fadeOut(
                     animationSpec = tween(
-                        durationMillis = 100,
+                        durationMillis = 200,
                         easing = Ease
                     )
                 )
@@ -298,7 +389,7 @@ fun AppNavGraph(
             enterTransition = {
                 fadeIn(
                     animationSpec = tween(
-                        durationMillis = 100,
+                        durationMillis = 200,
                         easing = Ease
                     )
                 )
@@ -306,7 +397,7 @@ fun AppNavGraph(
             exitTransition = {
                 fadeOut(
                     animationSpec = tween(
-                        durationMillis = 100,
+                        durationMillis = 200,
                         easing = Ease
                     )
                 )
@@ -325,7 +416,7 @@ fun AppNavGraph(
                     ),
                 onClickTown = { town ->
                     appViewModel.onEvent(AppEvent.ChangeTownFrom(town))
-                    navController.navigate(ScreenRoute.FlightScreen.route) {
+                    appNavController.navigate(ScreenRoute.FlightScreen.route) {
                         popUpTo(0)
                     }
                 }
@@ -337,7 +428,7 @@ fun AppNavGraph(
             enterTransition = {
                 fadeIn(
                     animationSpec = tween(
-                        durationMillis = 100,
+                        durationMillis = 200,
                         easing = Ease
                     )
                 )
@@ -345,7 +436,7 @@ fun AppNavGraph(
             exitTransition = {
                 fadeOut(
                     animationSpec = tween(
-                        durationMillis = 100,
+                        durationMillis = 200,
                         easing = Ease
                     )
                 )
@@ -364,7 +455,7 @@ fun AppNavGraph(
                     ),
                 onClickTown = { town ->
                     appViewModel.onEvent(AppEvent.ChangeTownTo(town))
-                    navController.navigate(ScreenRoute.FlightScreen.route) {
+                    appNavController.navigate(ScreenRoute.FlightScreen.route) {
                         popUpTo(0)
                     }
                 }

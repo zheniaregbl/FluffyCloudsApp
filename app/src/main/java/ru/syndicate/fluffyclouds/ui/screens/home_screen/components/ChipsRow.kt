@@ -24,6 +24,7 @@ import kotlinx.coroutines.launch
 import ru.syndicate.fluffyclouds.R
 import ru.syndicate.fluffyclouds.data.model.PeopleClassState
 import ru.syndicate.fluffyclouds.data.model.SheetContentState
+import ru.syndicate.fluffyclouds.ui.theme.BlackText
 import ru.syndicate.fluffyclouds.ui.theme.GrayText
 import java.time.LocalDate
 import java.time.Month
@@ -60,7 +61,7 @@ fun ChipsRow(
                         }
                     }
                     .padding(14.dp),
-                textColor = GrayText,
+                textColor = if (dateFlight.first == null) GrayText else BlackText,
                 icon = R.drawable.svg_calendar,
                 text = getChipText(dateFlight)
             )
@@ -99,7 +100,7 @@ fun ChipsRow(
                         }
                     }
                     .padding(14.dp),
-                textColor = GrayText,
+                textColor = BlackText,
                 icon = R.drawable.svg_people,
                 text = "$quantity, $classFlight"
             )

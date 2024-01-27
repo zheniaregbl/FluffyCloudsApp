@@ -1,6 +1,5 @@
-package ru.syndicate.fluffyclouds.ui.screens.home_screen.components
+package ru.syndicate.fluffyclouds.ui.screens.flight_list_screen.components
 
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,9 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -35,7 +32,8 @@ import ru.syndicate.fluffyclouds.ui.utils.DottedShape
 
 @Composable
 fun FlightCard(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isCheapest: Boolean = false
 ) {
 
     Column(
@@ -184,22 +182,32 @@ fun FlightCard(
                 )
             }
 
-            Row(
-                modifier = Modifier
-                    .background(
-                        color = Color.White
+            if (isCheapest)
+                Row(
+                    modifier = Modifier
+                        .background(
+                            color = Color.White
+                        )
+                        .fillMaxWidth()
+                        .padding(
+                            vertical = 20.dp,
+                            horizontal = 20.dp
+                        )
+                ) {
+                    FlightCardTag(
+                        textTag = "Дешёвый",
+                        color = CustomGreen
                     )
-                    .fillMaxWidth()
-                    .padding(
-                        vertical = 20.dp,
-                        horizontal = 20.dp
-                    )
-            ) {
-                FlightCardTag(
-                    textTag = "Дешёвый",
-                    color = CustomGreen
+                }
+            else
+                Spacer(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(20.dp)
+                        .background(
+                            color = Color.White
+                        )
                 )
-            }
         }
 
         Box(
