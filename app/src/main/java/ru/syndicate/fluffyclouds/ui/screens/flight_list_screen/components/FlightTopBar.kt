@@ -40,8 +40,7 @@ fun FlightTopBar(
         TownFlightModel(),
         TownFlightModel()
     ),
-    clickToBack: () -> Unit = { },
-    clickToFilter: () -> Unit = { }
+    clickToBack: () -> Unit = { }
 ) {
 
     Box(
@@ -62,8 +61,7 @@ fun FlightTopBar(
             Row(
                 modifier = Modifier
                     .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
+                verticalAlignment = Alignment.CenterVertically
             ) {
 
                 Row(
@@ -90,25 +88,6 @@ fun FlightTopBar(
                         fontSize = 17.sp,
                         fontWeight = FontWeight.Medium,
                         color = MainBlue
-                    )
-                }
-
-                Box(
-                    modifier = Modifier
-                        .clip(CircleShape)
-                        .clickable { clickToFilter() }
-                        .padding(
-                            10.dp
-                        ),
-                    contentAlignment = Alignment.Center
-                ) {
-
-                    Icon(
-                        modifier = Modifier
-                            .size(24.dp),
-                        imageVector = ImageVector.vectorResource(id = R.drawable.svg_filter),
-                        contentDescription = null,
-                        tint = BlackText
                     )
                 }
             }

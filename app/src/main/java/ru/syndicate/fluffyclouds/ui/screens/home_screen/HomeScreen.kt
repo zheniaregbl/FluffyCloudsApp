@@ -80,10 +80,6 @@ fun HomeScreen(
     searchFlight: () -> Unit = { }
 ) {
 
-    val scope = rememberCoroutineScope()
-
-    val lazyListState = rememberLazyListState()
-
     val listTown = listOf(
         TownCardModel(
             town = "Казань",
@@ -144,8 +140,6 @@ fun HomeScreen(
         ),
     )
 
-    val firstVisibleIndex by remember { derivedStateOf { lazyListState.firstVisibleItemIndex } }
-
     Box(
         modifier = modifier
     ) {
@@ -156,7 +150,7 @@ fun HomeScreen(
                 .padding(
                     top = 74.dp
                 ),
-            state = lazyListState
+            /*state = lazyListState*/
         ) {
 
             item {
@@ -416,22 +410,13 @@ fun HomeScreen(
                 .background(
                     color = Color.White
                 ),
-            isVisibleSearchColumn = firstVisibleIndex == 0,
+            canSearch = dateFlight.first != null
+                    && searchTown.first.town != ""
+                    && searchTown.second.town != "",
+            isEqualsTown = searchTown.first.town == searchTown.second.town
+                    && searchTown.first.town != "",
             onSearchClick = {
-
-                if (firstVisibleIndex != 0) {
-                    scope.launch {
-                        lazyListState.scrollToItem(0)
-                    }
-                } else {
-
-                    if (dateFlight.first != null
-                        && searchTown.first.town != ""
-                        && searchTown.second.town != "") {
-
-                        searchFlight()
-                    }
-                }
+                searchFlight()
             }
         )
     }

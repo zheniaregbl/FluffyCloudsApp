@@ -153,7 +153,7 @@ fun AppNavigation(
                     BottomBar(
                         modifier = Modifier
                             .padding(
-                                vertical = 50.dp,
+                                vertical = 30.dp,
                                 horizontal = 50.dp
                             )
                             .fillMaxWidth()

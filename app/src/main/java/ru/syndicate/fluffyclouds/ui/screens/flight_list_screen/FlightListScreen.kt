@@ -55,7 +55,7 @@ fun FlightListScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(
-                    top = 134.dp
+                    top = 120.dp
                 )
         ) {
 
