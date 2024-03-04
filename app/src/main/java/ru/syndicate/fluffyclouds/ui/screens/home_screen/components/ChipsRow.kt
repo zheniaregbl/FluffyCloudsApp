@@ -135,7 +135,7 @@ private fun getChipText(dateFlight: Pair<LocalDate?, LocalDate?>): String {
     return "$dateTextFrom | $dateTextTo"
 }
 
-private fun getTextMonth(month: Month) = when (month) {
+fun getTextMonth(month: Month) = when (month) {
     Month.JANUARY -> "янв"
     Month.FEBRUARY -> "фев"
     Month.MARCH -> "мар"

@@ -5,11 +5,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
@@ -17,355 +14,248 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import ru.syndicate.fluffyclouds.ui.theme.BackgroundColor
+import ru.syndicate.fluffyclouds.data.model.FlightCardTag
+import ru.syndicate.fluffyclouds.ui.common.CompanyImage
 import ru.syndicate.fluffyclouds.ui.theme.BlackText
 import ru.syndicate.fluffyclouds.ui.theme.CustomGreen
-import ru.syndicate.fluffyclouds.ui.theme.DashLineColor
+import ru.syndicate.fluffyclouds.ui.theme.CustomPurple
 import ru.syndicate.fluffyclouds.ui.theme.GrayText
-import ru.syndicate.fluffyclouds.ui.utils.DottedShape
+import java.text.DecimalFormat
 
 @Composable
 fun FlightCard(
     modifier: Modifier = Modifier,
-    isCheapest: Boolean = false
+    cost: Int = 10000,
+    timeFrom: String = "10:00",
+    timeTo: String = "14:00",
+    hoursInRoute: Int = 4,
+    transfers: Int = 0,
+    tagType: FlightCardTag = FlightCardTag.NONE
 ) {
 
-    Column(
-        modifier = modifier
-    ) {
+    Box {
 
         Column(
             modifier = Modifier
-                .fillMaxWidth()
                 .padding(
-                    horizontal = 20.dp
+                    top = if (tagType != FlightCardTag.NONE) 14.dp else 0.dp
                 )
+                .composed { modifier },
+            verticalArrangement = Arrangement.spacedBy(6.dp)
         ) {
 
-            Spacer(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(
-                        RoundedCornerShape(
-                            topStart = 16.dp,
-                            topEnd = 16.dp
-                        )
-                    )
-                    .height(14.dp)
-                    .background(
-                        color = Color.White
-                    )
+            Text(
+                text = "${DecimalFormat("#,###").format(cost).replace(",", " ")} ₽",
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.Bold,
+                fontSize = 22.sp,
+                color = BlackText
             )
 
             Row(
-                modifier = Modifier
-                    .background(
-                        color = Color.White
-                    )
-                    .fillMaxWidth()
-                    .padding(
-                        horizontal = 20.dp
-                    ),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.spacedBy(10.dp),
+                verticalAlignment = Alignment.Top
             ) {
 
-                Text(
-                    text = "МСК",
-                    style = MaterialTheme.typography.bodyMedium,
-                    fontSize = 28.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = BlackText
-                )
+                Box {
 
-                Text(
-                    text = "МСК",
-                    style = MaterialTheme.typography.bodyMedium,
-                    fontSize = 28.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = BlackText
-                )
-            }
-
-            Row(
-                modifier = Modifier
-                    .background(
-                        color = Color.White
+                    CompanyImage(
+                        modifier = Modifier
+                            .clip(CircleShape)
+                            .background(
+                                color = Color.White
+                            )
+                            .padding(2.dp),
+                        url = "https://nqzgkeopbshaepraaexh.supabase.co/storage/v1/object/public/company/company_aeroflot.png",
+                        imageSize = 24.dp
                     )
-                    .fillMaxWidth()
-                    .padding(
-                        horizontal = 20.dp
-                    ),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
 
-                Text(
-                    text = "Москва",
-                    style = MaterialTheme.typography.bodyMedium,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = GrayText
-                )
+                    if (transfers != 0) {
 
-                Text(
-                    text = "Москва",
-                    style = MaterialTheme.typography.bodyMedium,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = GrayText
-                )
-            }
-
-            Row(
-                modifier = Modifier
-                    .background(
-                        color = Color.White
-                    )
-                    .padding(
-                        top = 10.dp
-                    )
-                    .fillMaxWidth()
-                    .padding(
-                        horizontal = 20.dp
-                    ),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-
-                Text(
-                    text = "10:00",
-                    style = MaterialTheme.typography.bodyMedium,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = BlackText
-                )
-
-                Text(
-                    text = "10:00",
-                    style = MaterialTheme.typography.bodyMedium,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = BlackText
-                )
-            }
-
-            Row(
-                modifier = Modifier
-                    .background(
-                        color = Color.White
-                    )
-                    .fillMaxWidth()
-                    .padding(
-                        horizontal = 20.dp
-                    ),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-
-                Text(
-                    text = "10 ЯНВ 2023",
-                    style = MaterialTheme.typography.bodyMedium,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = GrayText
-                )
-
-                Text(
-                    text = "10 ЯНВ 2023",
-                    style = MaterialTheme.typography.bodyMedium,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = GrayText
-                )
-            }
-
-            if (isCheapest)
-                Row(
-                    modifier = Modifier
-                        .background(
-                            color = Color.White
+                        CompanyImage(
+                            modifier = Modifier
+                                .padding(
+                                    top = 16.dp
+                                )
+                                .clip(CircleShape)
+                                .background(
+                                    color = Color.White
+                                )
+                                .padding(2.dp),
+                            url = "https://nqzgkeopbshaepraaexh.supabase.co/storage/v1/object/public/company/company_s7.png",
+                            imageSize = 24.dp
                         )
-                        .fillMaxWidth()
-                        .padding(
-                            vertical = 20.dp,
-                            horizontal = 20.dp
-                        )
-                ) {
-                    FlightCardTag(
-                        textTag = "Дешёвый",
-                        color = CustomGreen
-                    )
+                    }
                 }
-            else
-                Spacer(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(20.dp)
-                        .background(
-                            color = Color.White
+
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    verticalAlignment = Alignment.Top
+                ) {
+
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(2.dp)
+                    ) {
+
+                        Text(
+                            text = timeFrom,
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontWeight = FontWeight.Medium,
+                            fontSize = 12.sp,
+                            color = BlackText
                         )
-                )
-        }
 
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-        ) {
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(
-                        horizontal = 20.dp
-                    )
-                    .height(30.dp)
-                    .background(
-                        color = Color.White
-                    ),
-                contentAlignment = Alignment.Center
-            ) {
-
-                Box(
-                    modifier = Modifier
-                        .height(2.dp)
-                        .fillMaxWidth()
-                        .padding(
-                            start = 15.dp
+                        Text(
+                            text = "SVO",
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontWeight = FontWeight.Medium,
+                            fontSize = 12.sp,
+                            color = GrayText
                         )
-                        .background(
-                            color = DashLineColor,
-                            shape = DottedShape(step = 10.dp)
-                        )
-                )
-            }
-
-            Box(
-                modifier = Modifier
-                    .align(Alignment.CenterStart)
-                    .padding(
-                        start = 5.dp
-                    )
-                    .clip(CircleShape)
-                    .size(30.dp)
-                    .background(
-                        color = BackgroundColor
-                    )
-            )
-
-            Box(
-                modifier = Modifier
-                    .align(Alignment.CenterEnd)
-                    .padding(
-                        end = 5.dp
-                    )
-                    .clip(CircleShape)
-                    .size(30.dp)
-                    .background(
-                        color = BackgroundColor
-                    )
-            )
-        }
-
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(
-                    horizontal = 20.dp
-                )
-        ) {
-
-            Row(
-                modifier = Modifier
-                    .background(
-                        color = Color.White
-                    )
-                    .padding(
-                        top = 10.dp
-                    )
-                    .fillMaxWidth()
-                    .padding(
-                        horizontal = 20.dp
-                    ),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-
-                Column {
+                    }
 
                     Text(
-                        text = "Компания",
+                        text = "—",
                         style = MaterialTheme.typography.bodyMedium,
-                        fontSize = 12.sp,
                         fontWeight = FontWeight.Medium,
+                        fontSize = 10.sp,
                         color = GrayText
                     )
 
-                    Text(
-                        text = "Аэрофлот",
-                        style = MaterialTheme.typography.bodyMedium,
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Medium,
-                        color = BlackText
-                    )
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(2.dp)
+                    ) {
+
+                        Text(
+                            text = timeTo,
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontWeight = FontWeight.Medium,
+                            fontSize = 12.sp,
+                            color = BlackText
+                        )
+
+                        Text(
+                            text = "AER",
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontWeight = FontWeight.Medium,
+                            fontSize = 12.sp,
+                            color = GrayText
+                        )
+                    }
                 }
 
-                Text(
-                    text = "2 000₽",
-                    style = MaterialTheme.typography.bodyMedium,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = BlackText
-                )
-            }
+                if (transfers == 0) {
 
-            Spacer(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(
-                        RoundedCornerShape(
-                            bottomStart = 16.dp,
-                            bottomEnd = 16.dp
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+
+                        Text(
+                            text = "Прямой рейс",
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontWeight = FontWeight.Medium,
+                            fontSize = 12.sp,
+                            color = BlackText
                         )
-                    )
-                    .height(14.dp)
-                    .background(
-                        color = Color.White
-                    )
-            )
+
+                        Text(
+                            text = "4ч в пути",
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontWeight = FontWeight.Medium,
+                            fontSize = 12.sp,
+                            color = BlackText
+                        )
+                    }
+                } else {
+
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+
+                            Text(
+                                text = "${hoursInRoute}ч в пути",
+                                style = MaterialTheme.typography.bodyMedium,
+                                fontWeight = FontWeight.Medium,
+                                fontSize = 12.sp,
+                                color = BlackText
+                            )
+
+                            Text(
+                                text = "/",
+                                style = MaterialTheme.typography.bodyMedium,
+                                fontWeight = FontWeight.Medium,
+                                fontSize = 12.sp,
+                                color = GrayText
+                            )
+
+                            Text(
+                                text = when {
+                                    transfers % 100 in 11..20 -> "$transfers пересадок"
+                                    transfers % 10 == 1 -> "$transfers пересадка"
+                                    transfers % 10 in 2..4 -> "$transfers пересадки"
+                                    else -> "$transfers пересадок"
+                                },
+                                style = MaterialTheme.typography.bodyMedium,
+                                fontWeight = FontWeight.Medium,
+                                fontSize = 12.sp,
+                                color = BlackText
+                            )
+                        }
+
+                        for (i in 0 until transfers) {
+
+                            Text(
+                                text = "1ч Стамбул",
+                                style = MaterialTheme.typography.bodyMedium,
+                                fontWeight = FontWeight.Medium,
+                                fontSize = 12.sp,
+                                color = GrayText
+                            )
+                        }
+                    }
+                }
+            }
         }
-    }
-}
 
-@Composable
-fun FlightCardTag(
-    textTag: String,
-    color: Color
-) {
-
-    Box(
-        modifier = Modifier
-            .clip(
-                RoundedCornerShape(8.dp)
+        if (tagType != FlightCardTag.NONE)
+            Text(
+                modifier = Modifier
+                    .padding(
+                        start = 8.dp
+                    )
+                    .clip(RoundedCornerShape(100.dp))
+                    .background(
+                        color = when (tagType) {
+                            FlightCardTag.CHEAPEST -> CustomGreen
+                            FlightCardTag.FASTER -> CustomPurple
+                            else -> Color.Transparent
+                        }
+                    )
+                    .padding(
+                        vertical = 2.dp,
+                        horizontal = 6.dp
+                    ),
+                text = when (tagType) {
+                    FlightCardTag.CHEAPEST -> "Самый дешёвый"
+                    FlightCardTag.FASTER -> "Самый быстрый"
+                    else -> ""
+                },
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.Medium,
+                fontSize = 12.sp,
+                color = Color.White
             )
-            .background(
-                color = color
-            )
-            .padding(
-                vertical = 6.dp,
-                horizontal = 16.dp
-            ),
-    ) {
-
-        Text(
-            text = textTag,
-            style = MaterialTheme.typography.bodyMedium,
-            fontSize = 12.sp,
-            fontWeight = FontWeight.Medium,
-            color = Color.White
-        )
     }
 }
 
@@ -374,6 +264,29 @@ fun FlightCardTag(
 fun PreviewFlightCard() {
     FlightCard(
         modifier = Modifier
+            .clip(RoundedCornerShape(10.dp))
             .fillMaxWidth()
+            .background(
+                color = Color.White
+            )
+            .padding(12.dp)
+    )
+}
+
+@Preview
+@Composable
+fun PreviewFlightCardWithTransfers() {
+    FlightCard(
+        modifier = Modifier
+            .clip(RoundedCornerShape(10.dp))
+            .fillMaxWidth()
+            .background(
+                color = Color.White
+            )
+            .padding(12.dp),
+        timeFrom = "09:00",
+        timeTo = "19:00",
+        hoursInRoute = 10,
+        transfers = 2
     )
 }

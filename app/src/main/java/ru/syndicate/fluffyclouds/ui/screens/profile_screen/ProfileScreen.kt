@@ -208,10 +208,7 @@ fun ProfileScreen(
 
         ProfileTopBar(
             modifier = Modifier
-                .fillMaxWidth()
-                .background(
-                    color = Color.White
-                ),
+                .fillMaxWidth(),
             userName = "Гость"
         )
     }

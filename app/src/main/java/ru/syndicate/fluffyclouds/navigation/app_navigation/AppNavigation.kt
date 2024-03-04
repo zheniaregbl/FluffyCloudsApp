@@ -38,7 +38,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import ru.syndicate.fluffyclouds.data.model.SheetContentState
-import ru.syndicate.fluffyclouds.navigation.utils.getCurrentRoute
 import ru.syndicate.fluffyclouds.ui.bottom_navigation_bar.BottomBar
 import ru.syndicate.fluffyclouds.ui.sheet_content.calendar_content.CalendarContent
 import ru.syndicate.fluffyclouds.ui.sheet_content.people_class_content.PeopleClassContent
@@ -55,6 +54,7 @@ fun AppNavigation(
 ) {
 
     val appViewModel = hiltViewModel<AppViewModel>()
+
     val searchTown by appViewModel.searchTowns.collectAsState()
     val dateFlight by appViewModel.dateFlight.collectAsState()
     val peopleClassState by appViewModel.peopleClassState.collectAsState()
@@ -66,8 +66,6 @@ fun AppNavigation(
         ScreenRoute.TicketScreen.route,
         ScreenRoute.ProfileScreen.route
     )
-
-    val currentRoute = getCurrentRoute(navController = navController)
 
     val showNavigationMenu = navController
         .currentBackStackEntryAsState().value?.destination?.route in routeList.map { it }

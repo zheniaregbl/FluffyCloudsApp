@@ -1,4 +1,4 @@
-package ru.syndicate.fluffyclouds
+package ru.syndicate.fluffyclouds.ui
 
 import android.content.pm.ActivityInfo
 import android.os.Bundle

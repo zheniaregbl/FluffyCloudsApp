@@ -10,7 +10,8 @@ import ru.syndicate.fluffyclouds.R
 val fontFamily = FontFamily(
     Font(R.font.sfprotext_regular, FontWeight.Normal),
     Font(R.font.sfprotext_medium, FontWeight.Medium),
-    Font(R.font.sfprotext_semibold, FontWeight.SemiBold)
+    Font(R.font.sfprotext_semibold, FontWeight.SemiBold),
+    Font(R.font.sfprotext_bold, FontWeight.Bold)
 )
 
 val Typography = Typography(

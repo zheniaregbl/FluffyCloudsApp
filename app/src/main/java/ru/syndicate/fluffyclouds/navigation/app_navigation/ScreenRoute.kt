@@ -10,6 +10,7 @@ sealed class ScreenRoute(val route: String) {
     data object ProfileScreen: ScreenRoute("profile_screen")
     data object SelectTownFromScreen: ScreenRoute("select_town_from_screen")
     data object SelectTownToScreen: ScreenRoute("select_town_to_screen")
+    data object InfoFlightScreen: ScreenRoute("info_flight_screen")
 }
 
 sealed class FlightScreenRoute(val route: String) {

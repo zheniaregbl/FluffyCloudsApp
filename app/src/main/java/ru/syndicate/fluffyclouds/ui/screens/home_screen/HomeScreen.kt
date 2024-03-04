@@ -148,9 +148,8 @@ fun HomeScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(
-                    top = 74.dp
-                ),
-            /*state = lazyListState*/
+                    top = 90.dp
+                )
         ) {
 
             item {
@@ -406,10 +405,7 @@ fun HomeScreen(
 
         HomeTopBar(
             modifier = Modifier
-                .fillMaxWidth()
-                .background(
-                    color = Color.White
-                ),
+                .fillMaxWidth(),
             canSearch = dateFlight.first != null
                     && searchTown.first.town != ""
                     && searchTown.second.town != "",

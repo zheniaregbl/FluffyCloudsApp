@@ -23,8 +23,11 @@ import androidx.navigation.compose.navigation
 import ru.syndicate.fluffyclouds.data.model.PeopleClassState
 import ru.syndicate.fluffyclouds.data.model.SheetContentState
 import ru.syndicate.fluffyclouds.data.model.TownFlightModel
+import ru.syndicate.fluffyclouds.extensions.canGoBack
+import ru.syndicate.fluffyclouds.extensions.currentRoute
 import ru.syndicate.fluffyclouds.ui.screens.flight_list_screen.FlightListScreen
 import ru.syndicate.fluffyclouds.ui.screens.home_screen.HomeScreen
+import ru.syndicate.fluffyclouds.ui.screens.info_flight_screen.InfoFlightScreen
 import ru.syndicate.fluffyclouds.ui.screens.profile_screen.ProfileScreen
 import ru.syndicate.fluffyclouds.ui.screens.register_screen.RegisterScreen
 import ru.syndicate.fluffyclouds.ui.screens.select_town_screen.SelectTownScreen
@@ -278,16 +281,19 @@ fun AppNavGraph(
                             appViewModel.onEvent(AppEvent.ChangeSheetContentType(it))
                     },
                     onClickFromField = {
-                        appNavController.navigate(ScreenRoute.SelectTownFromScreen.route)
+                        if (appNavController.currentRoute != ScreenRoute.SelectTownFromScreen.route)
+                            appNavController.navigate(ScreenRoute.SelectTownFromScreen.route)
                     },
                     onClickToField = {
-                        appNavController.navigate(ScreenRoute.SelectTownToScreen.route)
+                        if (appNavController.currentRoute != ScreenRoute.SelectTownToScreen.route)
+                            appNavController.navigate(ScreenRoute.SelectTownToScreen.route)
                     },
                     onClickSwap = {
                         appViewModel.onEvent(AppEvent.SwapTown)
                     },
                     searchFlight = {
-                        appNavController.navigate(FlightScreenRoute.FlightListScreen.route)
+                        if (appNavController.currentRoute != FlightScreenRoute.FlightListScreen.route)
+                            appNavController.navigate(FlightScreenRoute.FlightListScreen.route)
                     }
                 )
             }
@@ -323,10 +329,17 @@ fun AppNavGraph(
                         if (scaffoldState.bottomSheetState.targetValue != SheetValue.Expanded)
                             appViewModel.onEvent(AppEvent.ChangeSheetContentType(it))
                     },
+                    navigateToInfoFlight = {
+                        if (appNavController.currentRoute != ScreenRoute.InfoFlightScreen.route)
+                            appNavController.navigate(ScreenRoute.InfoFlightScreen.route)
+                    },
+                    navigateToInfoFlightTransfer = {
+                        if (appNavController.currentRoute != "transfers")
+                            appNavController.navigate("transfers")
+                    },
                     clickToBack = {
-                        appNavController.navigate(FlightScreenRoute.HomeScreen.route) {
-                            popUpTo(0)
-                        }
+                        if (appNavController.canGoBack)
+                            appNavController.popBackStack()
                     }
                 )
             }
@@ -407,9 +420,6 @@ fun AppNavGraph(
             SelectTownScreen(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(
-                        color = BackgroundColor
-                    )
                     .padding(
                         horizontal = 20.dp,
                         vertical = 20.dp
@@ -446,9 +456,6 @@ fun AppNavGraph(
             SelectTownScreen(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(
-                        color = BackgroundColor
-                    )
                     .padding(
                         horizontal = 20.dp,
                         vertical = 20.dp
@@ -459,6 +466,67 @@ fun AppNavGraph(
                         popUpTo(0)
                     }
                 }
+            )
+        }
+
+        composable(
+            route = ScreenRoute.InfoFlightScreen.route,
+            enterTransition = {
+                fadeIn(
+                    animationSpec = tween(
+                        durationMillis = 200,
+                        easing = Ease
+                    )
+                )
+            },
+            exitTransition = {
+                fadeOut(
+                    animationSpec = tween(
+                        durationMillis = 200,
+                        easing = Ease
+                    )
+                )
+            }
+        ) {
+
+            InfoFlightScreen(
+                modifier = Modifier
+                    .fillMaxSize(),
+                clickToBack = {
+                    if (appNavController.canGoBack && appNavController.currentRoute != FlightScreenRoute.FlightListScreen.route)
+                        appNavController.popBackStack()
+                }
+            )
+        }
+
+        composable(
+            route = "transfers",
+            enterTransition = {
+                fadeIn(
+                    animationSpec = tween(
+                        durationMillis = 200,
+                        easing = Ease
+                    )
+                )
+            },
+            exitTransition = {
+                fadeOut(
+                    animationSpec = tween(
+                        durationMillis = 200,
+                        easing = Ease
+                    )
+                )
+            }
+        ) {
+
+            InfoFlightScreen(
+                modifier = Modifier
+                    .fillMaxSize(),
+                clickToBack = {
+                    if (appNavController.canGoBack && appNavController.currentRoute != FlightScreenRoute.FlightListScreen.route)
+                        appNavController.popBackStack()
+                },
+                transfers = 2
             )
         }
     }

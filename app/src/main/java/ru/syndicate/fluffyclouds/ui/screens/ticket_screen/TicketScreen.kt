@@ -139,9 +139,6 @@ fun TicketScreen(
         TicketTopBar(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(
-                    color = Color.White
-                )
         )
     }
 }
